@@ -1,9 +1,11 @@
 package akka.streams
 
+import akka.NotUsed
 import akka.actor.ActorSystem
 import akka.stream.Supervision.Decider
 import akka.stream.scaladsl._
 import akka.stream.{ActorMaterializer, ActorMaterializerSettings, Supervision}
+import com.typesafe.config.ConfigFactory
 import org.scalatest.{BeforeAndAfterAll, FunSuite}
 
 import scala.concurrent.duration._
