@@ -10,7 +10,7 @@ libraryDependencies ++= {
     "com.typesafe.akka" % "akka-stream_2.11" % akkaVersion,
     "com.typesafe.akka" % "akka-slf4j_2.11" % akkaVersion,
     "ch.qos.logback" % "logback-classic" % "1.1.7",
-    "org.scalatest" % "scalatest_2.12" % "3.0.0" % "test",
+    "org.scalatest" % "scalatest_2.12" % "3.0.0" % "test"
   )
 }
 scalacOptions ++= Seq(
