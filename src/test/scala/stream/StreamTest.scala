@@ -1,4 +1,4 @@
-package akka.streams
+package stream
 
 import akka.NotUsed
 import akka.actor.ActorSystem
