@@ -28,20 +28,20 @@ class StreamTest extends FunSuite with BeforeAndAfterAll {
   }
 
   test("run foreach") {
-    source.runForeach { i => assert(i > 0 && i < 11) }
+    source.runForeach { value => assert(value > 0 && value < 11) }
   }
 
   test("run fold") {
-    source.runFold(0)(_ + _) map { r => assert(r == 10) }
+    source.runFold(0)(_ + _) map { sum => assert(sum == 10) }
   }
 
   test("run reduce") {
-    source.runReduce(_ + _) map { r => assert(r == 10) }
+    source.runReduce(_ + _) map { sum => assert(sum == 10) }
   }
 
   test("run with") {
-    source.runWith(Sink.fold(0)(_ + _)) map { r => assert(r == 10) }
-    source.runWith(Sink.foreach { i => assert(i > 0 && i < 11) })
+    source.runWith(Sink.fold(0)(_ + _)) map { sum => assert(sum == 10) }
+    source.runWith(Sink.foreach { value => assert(value > 0 && value < 11) })
   }
 
   test("source > flow > sink") {
