@@ -27,26 +27,21 @@ class StreamTest extends FunSuite with BeforeAndAfterAll {
     Await.result(system.terminate(), 1 second)
   }
 
-  test("run foreach") {
-    source.runForeach { value => assert(value >= 1 && value <= 10) }
-  }
-
   test("run fold") {
-    source.runFold(0)(_ + _) map { sum => assert(sum == 55) }
+    Await.result(source.runFold(0)(_ + _) map { sum => assert(sum == 55) }, 1 second)
   }
 
   test("run reduce") {
-    source.runReduce(_ + _) map { sum => assert(sum == 55) }
+    Await.result(source.runReduce(_ + _) map { sum => assert(sum == 55) }, 1 second)
   }
 
   test("run with") {
-    source.runWith(sink)
-    source.runWith(Sink.fold(0)(_ + _)) map { sum => assert(sum == 55) }
-    source.runWith(Sink.foreach { value => assert(value >= 1 && value <= 10) })
-    flow.runWith(source, sink)._2 map { sum => assert(sum == 55) }
+    Await.result(source.runWith(sink) map { sum => assert(sum == 55) }, 1 second)
+    Await.result(source.runWith(Sink.fold(0)(_ + _)) map { sum => assert(sum == 55) }, 1 second)
+    Await.result(flow.runWith(source, sink)._2 map { sum => assert(sum == 55) }, 1 second)
   }
 
   test("run") {
-    graph.run map { sum => assert(sum == 55) }
+    Await.result(graph.run map { sum => assert(sum == 55) }, 1 second)
   }
 }
