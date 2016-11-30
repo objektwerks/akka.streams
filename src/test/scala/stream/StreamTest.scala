@@ -38,6 +38,7 @@ class StreamTest extends FunSuite with BeforeAndAfterAll with Matchers {
   test("run with") {
     Await.result(source.runWith(sink) map { _ shouldBe 55 }, 1 second)
     Await.result(source.runWith(Sink.fold(0)(_ + _)) map { _ shouldBe 55 }, 1 second)
+    Await.result(source.runWith(Sink.reduce[Int](_ + _)) map { _ shouldBe 55 }, 1 second)
     Await.result(flow.runWith(source, sink)._2 map { _ shouldBe 55 }, 1 second)
   }
 
