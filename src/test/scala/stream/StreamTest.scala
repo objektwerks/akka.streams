@@ -45,12 +45,10 @@ class StreamTest extends FunSuite with BeforeAndAfterAll {
   }
 
   test("source > flow > sink") {
-    val future = flow.runWith(source, sink)._2
-    future map { sum => assert(sum == 10) }
+    flow.runWith(source, sink)._2 map { sum => assert(sum == 10) }
   }
 
   test("graph") {
-    val future = graph.run()
-    future map { sum => assert(sum == 10) }
+    graph.run map { sum => assert(sum == 10) }
   }
 }
