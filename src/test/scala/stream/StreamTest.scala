@@ -28,7 +28,7 @@ class StreamTest extends FunSuite with BeforeAndAfterAll {
   }
 
   test("run foreach") {
-    source.runForeach { value => assert(value > 0 && value < 11) }
+    source.runForeach { value => assert(value >= 1 && value <= 10) }
   }
 
   test("run fold") {
@@ -42,7 +42,7 @@ class StreamTest extends FunSuite with BeforeAndAfterAll {
   test("run with") {
     source.runWith(sink)
     source.runWith(Sink.fold(0)(_ + _)) map { sum => assert(sum == 10) }
-    source.runWith(Sink.foreach { value => assert(value > 0 && value < 11) })
+    source.runWith(Sink.foreach { value => assert(value >= 1 && value <= 10) })
     flow.runWith(source, sink)._2 map { sum => assert(sum == 10) }
   }
 
