@@ -20,7 +20,7 @@ class StreamTest extends AsyncFunSuite with BeforeAndAfterAll with Matchers {
 
   val source: Source[Int, NotUsed] = Source(1 to 10)
   val sink: Sink[Int, Future[Int]] = Sink.fold[Int, Int](0)(_ + _)
-  val flow: Flow[Int, Int, NotUsed] = Flow.fromSinkAndSource(sink, source)
+  val flow: Flow[Int, Int, NotUsed] = Flow[Int].map(_ * 2)
   val graph: RunnableGraph[Future[Int]] = source.via(flow).toMat(sink)(Keep.right)
 
   override protected def afterAll(): Unit = {
@@ -39,10 +39,10 @@ class StreamTest extends AsyncFunSuite with BeforeAndAfterAll with Matchers {
     source.runWith(sink) map { _ shouldBe 55 }
     source.runWith(Sink.fold(0)(_ + _)) map { _ shouldBe 55 }
     source.runWith(Sink.reduce[Int](_ + _)) map { _ shouldBe 55 }
-    flow.runWith(source, sink)._2 map { _ shouldBe 55 }
+    flow.runWith(source, sink)._2 map { _ shouldBe 110 }
   }
 
   test("run") {
-    graph.run map { _ shouldBe 55 }
+    graph.run map { _ shouldBe 110 }
   }
 }
