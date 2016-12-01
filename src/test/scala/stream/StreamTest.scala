@@ -6,12 +6,12 @@ import akka.stream.Supervision.Decider
 import akka.stream.scaladsl._
 import akka.stream.{ActorMaterializer, ActorMaterializerSettings, Supervision}
 import com.typesafe.config.ConfigFactory
-import org.scalatest.{BeforeAndAfterAll, FunSuite, Matchers}
+import org.scalatest.{AsyncFunSuite, BeforeAndAfterAll, Matchers}
 
 import scala.concurrent.duration._
 import scala.concurrent.{Await, Future}
 
-class StreamTest extends FunSuite with BeforeAndAfterAll with Matchers {
+class StreamTest extends AsyncFunSuite with BeforeAndAfterAll with Matchers {
   implicit val system: ActorSystem = ActorSystem.create("stream", ConfigFactory.load("test.conf"))
   implicit val ec = system.dispatcher
   val decider: Decider = Supervision.resumingDecider
@@ -28,21 +28,21 @@ class StreamTest extends FunSuite with BeforeAndAfterAll with Matchers {
   }
 
   test("run fold") {
-    Await.result(source.runFold(0)(_ + _) map { _ shouldBe 55 }, 1 second)
+    source.runFold(0)(_ + _) map { _ shouldBe 55 }
   }
 
   test("run reduce") {
-    Await.result(source.runReduce(_ + _) map { _ shouldBe 55 }, 1 second)
+    source.runReduce(_ + _) map { _ shouldBe 55 }
   }
 
   test("run with") {
-    Await.result(source.runWith(sink) map { _ shouldBe 55 }, 1 second)
-    Await.result(source.runWith(Sink.fold(0)(_ + _)) map { _ shouldBe 55 }, 1 second)
-    Await.result(source.runWith(Sink.reduce[Int](_ + _)) map { _ shouldBe 55 }, 1 second)
-    Await.result(flow.runWith(source, sink)._2 map { _ shouldBe 55 }, 1 second)
+    source.runWith(sink) map { _ shouldBe 55 }
+    source.runWith(Sink.fold(0)(_ + _)) map { _ shouldBe 55 }
+    source.runWith(Sink.reduce[Int](_ + _)) map { _ shouldBe 55 }
+    flow.runWith(source, sink)._2 map { _ shouldBe 55 }
   }
 
   test("run") {
-    Await.result(graph.run map { _ shouldBe 55 }, 1 second)
+    graph.run map { _ shouldBe 55 }
   }
 }
