@@ -27,22 +27,20 @@ class StreamTest extends AsyncFunSuite with BeforeAndAfterAll with Matchers {
     Await.result(system.terminate(), 1 second)
   }
 
-  test("run fold") {
+  test("source") {
     source.runFold(0)(_ + _) map { _ shouldBe 55 }
-  }
-
-  test("run reduce") {
     source.runReduce(_ + _) map { _ shouldBe 55 }
   }
 
-  test("run with") {
+  test("source ~ sink") {
     source.runWith(sink) map { _ shouldBe 55 }
-    source.runWith(Sink.fold(0)(_ + _)) map { _ shouldBe 55 }
-    source.runWith(Sink.reduce[Int](_ + _)) map { _ shouldBe 55 }
+  }
+
+  test("source ~ flow ~ sink") {
     flow.runWith(source, sink)._2 map { _ shouldBe 110 }
   }
 
-  test("run") {
+  test("graph") {
     graph.run map { _ shouldBe 110 }
   }
 }
