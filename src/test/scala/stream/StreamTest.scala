@@ -19,8 +19,8 @@ class StreamTest extends AsyncFunSuite with BeforeAndAfterAll with Matchers {
   implicit val materializer = ActorMaterializer(settings)
 
   val source: Source[Int, NotUsed] = Source(1 to 10)
-  val sink: Sink[Int, Future[Int]] = Sink.fold[Int, Int](0)(_ + _)
   val flow: Flow[Int, Int, NotUsed] = Flow[Int].map(_ * 2)
+  val sink: Sink[Int, Future[Int]] = Sink.fold[Int, Int](0)(_ + _)
   val graph: RunnableGraph[Future[Int]] = source.via(flow).toMat(sink)(Keep.right)
 
   override protected def afterAll(): Unit = {
