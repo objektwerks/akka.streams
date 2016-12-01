@@ -38,7 +38,6 @@ class StreamTest extends AsyncFunSuite with BeforeAndAfterAll with Matchers {
   }
 
   test("source ~ flow ~ sink") {
-    source.viaMat(flow)(Keep.right).toMat(sink)(Keep.right).run map { _ shouldBe 110 }
     source.via(flow).toMat(sink)(Keep.right).run map { _ shouldBe 110 }
     source.via(flow).runWith(sink) map { _ shouldBe 110 }
   }
