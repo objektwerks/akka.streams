@@ -12,7 +12,7 @@ import scala.concurrent.duration._
 import scala.concurrent.{Await, Future}
 
 class StreamTest extends AsyncFunSuite with BeforeAndAfterAll with Matchers {
-  implicit val system: ActorSystem = ActorSystem.create("stream", ConfigFactory.load("test.conf"))
+  implicit val system = ActorSystem.create("stream", ConfigFactory.load("test.conf"))
   implicit val dispatcher = system.dispatcher
   val decider: Decider = Supervision.resumingDecider
   val settings = ActorMaterializerSettings(system).withSupervisionStrategy(decider)
