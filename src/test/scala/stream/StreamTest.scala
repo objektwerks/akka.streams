@@ -13,7 +13,7 @@ import scala.concurrent.{Await, Future}
 
 class StreamTest extends AsyncFunSuite with BeforeAndAfterAll with Matchers {
   implicit val system: ActorSystem = ActorSystem.create("stream", ConfigFactory.load("test.conf"))
-  implicit val ec = system.dispatcher
+  implicit val dispatcher = system.dispatcher
   val decider: Decider = Supervision.resumingDecider
   val settings = ActorMaterializerSettings(system).withSupervisionStrategy(decider)
   implicit val materializer = ActorMaterializer(settings)
