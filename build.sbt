@@ -1,16 +1,16 @@
 name := "akka.streams"
 organization := "objektwerks"
 version := "0.1-SNAPSHOT"
-scalaVersion := "2.12.1"
+scalaVersion := "2.12.2"
 ivyScala := ivyScala.value map { _.copy(overrideScalaVersion = true) }
 libraryDependencies ++= {
-  val akkaVersion = "2.4.14"
+  val akkaVersion = "2.5.2"
   Seq(
     "com.typesafe.akka" % "akka-actor_2.12" % akkaVersion,
     "com.typesafe.akka" % "akka-stream_2.12" % akkaVersion,
     "com.typesafe.akka" % "akka-slf4j_2.12" % akkaVersion,
-    "ch.qos.logback" % "logback-classic" % "1.1.7",
-    "org.scalatest" % "scalatest_2.12" % "3.0.1" % "test"
+    "ch.qos.logback" % "logback-classic" % "1.2.3",
+    "org.scalatest" % "scalatest_2.12" % "3.0.3" % "test"
   )
 }
 scalacOptions ++= Seq(
