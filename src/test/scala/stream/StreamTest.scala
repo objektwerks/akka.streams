@@ -23,7 +23,9 @@ class StreamTest extends AsyncFunSuite with BeforeAndAfterAll with Matchers {
   val sink: Sink[Int, Future[Int]] = Sink.fold[Int, Int](0)(_ + _)
 
   override protected def afterAll(): Unit = {
+    import scala.language.postfixOps
     Await.result(system.terminate(), 1 second)
+    ()
   }
 
   test("source") {
