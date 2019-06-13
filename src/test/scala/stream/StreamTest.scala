@@ -4,7 +4,7 @@ import akka.NotUsed
 import akka.actor.ActorSystem
 import akka.stream.Supervision.Decider
 import akka.stream.scaladsl._
-import akka.stream.{ActorMaterializer, ActorMaterializerSettings, Supervision}
+import akka.stream.{ActorMaterializer, ActorMaterializerSettings, SourceShape, Supervision}
 import com.typesafe.config.ConfigFactory
 import org.scalatest.{AsyncFunSuite, BeforeAndAfterAll, Matchers}
 
@@ -45,5 +45,23 @@ class StreamTest extends AsyncFunSuite with BeforeAndAfterAll with Matchers {
 
   test("flow ~ source ~ sink") {
     flow.runWith(source, sink)._2 map { _ shouldBe 60 }
+  }
+
+  test("graph dsl") {
+    val source = Source.fromGraph( GraphDSL.create() { implicit builder =>
+      import GraphDSL.Implicits._
+
+      val source1 = Source(1 to 10)
+      val source2 = Source(1 to 10)
+
+      val merge = builder.add( ZipWith( (a:Int, b:Int) => { a + b } ) )
+
+      source1 ~> merge.in1
+      source2 ~> merge.in0
+
+      SourceShape(merge.out)
+    } )
+
+    source.runWith(sink) map { _ shouldBe 110 }
   }
 }
