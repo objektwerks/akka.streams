@@ -56,6 +56,7 @@ class StreamTest extends AsyncFunSuite with BeforeAndAfterAll with Matchers {
 
       SourceShape(merge.out)
     } )
+    val sink = Sink.reduce[Int](_ + _)
     source.runWith(sink) map { _ shouldBe 110 }
   }
 }
