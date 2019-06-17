@@ -49,7 +49,7 @@ class StreamsTest extends AsyncFunSuite with BeforeAndAfterAll with Matchers {
       val source1 = Source(1 to 10)
       val source2 = Source(1 to 10)
 
-      val merge = builder.add( ZipWith( (a:Int, b:Int) => { a + b } ) )
+      val merge = builder.add( ZipWith( (a: Int, b: Int) => { a + b } ) )
 
       source1 ~> merge.in1
       source2 ~> merge.in0
