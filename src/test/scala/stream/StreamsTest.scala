@@ -10,8 +10,9 @@ import org.scalatest.{AsyncFunSuite, BeforeAndAfterAll, Matchers}
 
 import scala.concurrent.duration._
 import scala.concurrent.{Await, Future}
+import scala.language.postfixOps
 
-class StreamTest extends AsyncFunSuite with BeforeAndAfterAll with Matchers {
+class StreamsTest extends AsyncFunSuite with BeforeAndAfterAll with Matchers {
   implicit val system = ActorSystem.create("stream", ConfigFactory.load("test.conf"))
   val decider: Decider = Supervision.restartingDecider
   val settings = ActorMaterializerSettings(system).withSupervisionStrategy(decider)
@@ -22,7 +23,6 @@ class StreamTest extends AsyncFunSuite with BeforeAndAfterAll with Matchers {
   val sink: Sink[Int, Future[Int]] = Sink.fold[Int, Int](0)(_ + _)
 
   override protected def afterAll(): Unit = {
-    import scala.language.postfixOps
     Await.result(system.terminate(), 1 second)
     ()
   }
