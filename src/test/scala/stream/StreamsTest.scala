@@ -2,9 +2,8 @@ package stream
 
 import akka.NotUsed
 import akka.actor.ActorSystem
-import akka.stream.Supervision.Decider
 import akka.stream.scaladsl._
-import akka.stream.{ActorMaterializer, ActorMaterializerSettings, SourceShape, Supervision}
+import akka.stream.{ActorMaterializer, SourceShape}
 import com.typesafe.config.ConfigFactory
 import org.scalatest.{AsyncFunSuite, BeforeAndAfterAll, Matchers}
 
@@ -13,10 +12,8 @@ import scala.concurrent.{Await, Future}
 import scala.language.postfixOps
 
 class StreamsTest extends AsyncFunSuite with BeforeAndAfterAll with Matchers {
-  implicit val system = ActorSystem.create("stream", ConfigFactory.load("test.conf"))
-  val decider: Decider = Supervision.restartingDecider
-  val settings = ActorMaterializerSettings(system).withSupervisionStrategy(decider)
-  implicit val materializer = ActorMaterializer(settings)
+  implicit val system = ActorSystem.create("streams", ConfigFactory.load("test.conf"))
+  implicit val materializer = ActorMaterializer()
 
   val source: Source[Int, NotUsed] = Source(1 to 10)
   val flow: Flow[Int, Int, NotUsed] = Flow[Int].filter(_ % 2 == 0).map(_ * 2)
