@@ -57,7 +57,6 @@ class StreamTest extends AsyncFunSuite with BeforeAndAfterAll with Matchers {
 
       SourceShape(merge.out)
     } )
-
     source.runWith(sink) map { _ shouldBe 110 }
   }
 }
