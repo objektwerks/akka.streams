@@ -41,19 +41,21 @@ class StreamsTest extends AsyncFunSuite with BeforeAndAfterAll with Matchers {
   }
 
   test("graph dsl") {
-    val source = Source.fromGraph( GraphDSL.create() { implicit builder =>
-      import GraphDSL.Implicits._
+    val source = Source.fromGraph(
+      GraphDSL.create() { implicit builder =>
+        import GraphDSL.Implicits._
 
-      val source1 = Source(1 to 10)
-      val source2 = Source(1 to 10)
+        val source1 = Source(1 to 10)
+        val source2 = Source(1 to 10)
 
-      val merge = builder.add( ZipWith( (a: Int, b: Int) => { a + b } ) )
+        val merge = builder.add( ZipWith( (a: Int, b: Int) => { a + b } ) )
 
-      source1 ~> merge.in1
-      source2 ~> merge.in0
+        source1 ~> merge.in0
+        source2 ~> merge.in1
 
-      SourceShape(merge.out)
-    } )
+        SourceShape(merge.out)
+      }
+    )
     val sink = Sink.reduce[Int](_ + _)
     source.runWith(sink) map { _ shouldBe 110 }
   }
