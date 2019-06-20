@@ -6,13 +6,11 @@ import akka.stream.{ActorMaterializer, SourceShape}
 import com.typesafe.config.ConfigFactory
 import org.scalatest.{AsyncFunSuite, BeforeAndAfterAll, Matchers}
 
-import scala.language.postfixOps
-
 class GraphsTest extends AsyncFunSuite with BeforeAndAfterAll with Matchers {
   implicit val system = ActorSystem.create("streams", ConfigFactory.load("test.conf"))
   implicit val materializer = ActorMaterializer()
 
-  test("graph dsl") {
+  test("source graph") {
     val source = Source.fromGraph(
       GraphDSL.create() { implicit builder =>
         import GraphDSL.Implicits._
