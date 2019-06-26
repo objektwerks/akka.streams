@@ -2,7 +2,7 @@ package streams
 
 import akka.NotUsed
 import akka.actor.ActorSystem
-import akka.stream.ActorMaterializer
+import akka.stream.{ActorMaterializer, SourceShape}
 import akka.stream.scaladsl._
 import com.typesafe.config.ConfigFactory
 import org.scalatest.{AsyncFunSuite, BeforeAndAfterAll, Matchers}
@@ -38,5 +38,25 @@ class StreamsTest extends AsyncFunSuite with BeforeAndAfterAll with Matchers {
     source.via(flow).toMat(sink)(Keep.right).run map { _ shouldBe 60 }
     source.via(flow).runWith(sink) map { _ shouldBe 60 }
     flow.runWith(source, sink)._2 map { _ shouldBe 60 }
+  }
+
+  test("source graph") {
+    val sourceGraph = Source.fromGraph(
+      GraphDSL.create() { implicit builder =>
+        import GraphDSL.Implicits._
+
+        val source1 = Source(1 to 10)
+        val source2 = Source(1 to 10)
+
+        val merge = builder.add( ZipWith( (a: Int, b: Int) => { a + b } ) )
+
+        source1 ~> merge.in0
+        source2 ~> merge.in1
+
+        SourceShape(merge.out)
+      }
+    )
+    val sink = Sink.reduce[Int](_ + _)
+    sourceGraph.runWith(sink) map { _ shouldBe 110 }
   }
 }
