@@ -2,18 +2,19 @@ package streams
 
 import akka.NotUsed
 import akka.actor.ActorSystem
-import akka.stream.{ActorMaterializer, SourceShape}
 import akka.stream.scaladsl._
+import akka.stream.{ActorMaterializer, ClosedShape, SinkShape, SourceShape}
 import com.typesafe.config.ConfigFactory
-import org.scalatest.{AsyncFunSuite, BeforeAndAfterAll, Matchers}
+import org.scalatest.{BeforeAndAfterAll, FunSuite, Matchers}
 
 import scala.concurrent.duration._
 import scala.concurrent.{Await, Future}
 import scala.language.postfixOps
 
-class StreamsTest extends AsyncFunSuite with BeforeAndAfterAll with Matchers {
+class StreamsTest extends FunSuite with BeforeAndAfterAll with Matchers {
   implicit val system = ActorSystem.create("streams", ConfigFactory.load("test.conf"))
   implicit val materializer = ActorMaterializer()
+  implicit val ec = system.dispatcher
 
   val source: Source[Int, NotUsed] = Source(1 to 10)
   val flow: Flow[Int, Int, NotUsed] = Flow[Int].filter(_ % 2 == 0).map(_ * 2)
@@ -40,6 +41,30 @@ class StreamsTest extends AsyncFunSuite with BeforeAndAfterAll with Matchers {
     flow.runWith(source, sink)._2 map { _ shouldBe 60 }
   }
 
+  test("graph") {
+    val source = Source(1 to 10)
+    val incrementer = Flow[Int].map(_ + 1)
+    val multiplier = Flow[Int].map(_ * 2)
+    val sink = Sink.reduce[(Int, Int)]( (a, b) => (a._1 + a._2, b._1 + b._2) )
+
+    val graph = RunnableGraph.fromGraph(
+      GraphDSL.create() { implicit builder: GraphDSL.Builder[NotUsed] =>
+        import GraphDSL.Implicits._
+
+        val broadcast = builder.add(Broadcast[Int](2))
+        val zip = builder.add(Zip[Int, Int])
+
+        source ~> broadcast
+        broadcast.out(0) ~> incrementer ~> zip.in0
+        broadcast.out(1) ~> multiplier ~> zip.in1
+        zip.out ~> sink
+
+        ClosedShape
+      }
+    )
+    graph.run
+  }
+
   test("source graph") {
     val sourceGraph = Source.fromGraph(
       GraphDSL.create() { implicit builder =>
@@ -58,5 +83,24 @@ class StreamsTest extends AsyncFunSuite with BeforeAndAfterAll with Matchers {
     )
     val sink = Sink.reduce[Int](_ + _)
     sourceGraph.runWith(sink) map { _ shouldBe 110 }
+  }
+
+  test("sink graph") {
+    val sinkGraph = Sink.fromGraph(
+      GraphDSL.create() { implicit builder =>
+        import GraphDSL.Implicits._
+
+        val sink1 = Sink.reduce[Int](_ + _)
+        val sink2 = Sink.reduce[Int](_ + _)
+
+        val broadcast = builder.add(Broadcast[Int](2))
+        broadcast ~> sink1
+        broadcast ~> sink2
+
+        SinkShape(broadcast.in)
+      }
+    )
+    val source = Source(1 to 10)
+    source.runWith(sinkGraph)
   }
 }
