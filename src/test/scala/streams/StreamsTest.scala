@@ -102,6 +102,6 @@ class StreamsTest extends FunSuite with BeforeAndAfterAll with Matchers {
       }
     )
     val source = Source(1 to 10)
-    source.runWith(sinkGraph)
+    sinkGraph.runWith(source)
   }
 }
