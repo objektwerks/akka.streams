@@ -122,7 +122,7 @@ class StreamsTest extends FunSuite with BeforeAndAfterAll with Matchers {
       }
     )
     val source = Source(1 to 10)
-    val tuple = source.runWith(sinkGraph)
-    Await.result( Future.sequence(List(tuple._1, tuple._2)), 3 seconds ).sum shouldBe 110
+    val futures = source.runWith(sinkGraph)
+    Await.result( Future.sequence(List(futures._1, futures._2)), 3 seconds ).sum shouldBe 110
   }
 }
