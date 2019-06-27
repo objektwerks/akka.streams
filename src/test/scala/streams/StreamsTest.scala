@@ -49,7 +49,7 @@ class StreamsTest extends FunSuite with BeforeAndAfterAll with Matchers {
     val sink = Sink.reduce[(Int, Int)]( (a, b) => (a._1 + a._2, b._1 + b._2) )
 
     val graph = RunnableGraph.fromGraph(
-      GraphDSL.create() { implicit builder =>
+      GraphDSL.create(sink) { implicit builder => sink =>
         import GraphDSL.Implicits._
 
         val broadcast = builder.add(Broadcast[Int](2))
@@ -63,7 +63,7 @@ class StreamsTest extends FunSuite with BeforeAndAfterAll with Matchers {
         ClosedShape
       }
     )
-    graph.run
+    graph.run map( _ shouldEqual( (144,31) ) )
   }
 
   test("source graph") {
