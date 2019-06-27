@@ -6,7 +6,7 @@ import akka.stream._
 import com.typesafe.config.ConfigFactory
 import org.scalatest.{BeforeAndAfterAll, FunSuite, Matchers}
 
-import scala.concurrent.Await
+import scala.concurrent.{Await, Future}
 import scala.concurrent.duration._
 import scala.language.postfixOps
 
@@ -123,10 +123,6 @@ class StreamsTest extends FunSuite with BeforeAndAfterAll with Matchers {
     )
     val source = Source(1 to 10)
     val tuple = source.runWith(sinkGraph)
-    val future = for {
-      f1 <- tuple._1
-      f2 <- tuple._2
-    } yield f1 + f2
-    Await.result( future, 1 second) shouldBe 110
+    Await.result( Future.sequence(List(tuple._1, tuple._2)), 3 seconds ).sum shouldBe 110
   }
 }
