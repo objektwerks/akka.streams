@@ -7,8 +7,8 @@ import akka.stream.{ActorMaterializer, ClosedShape, SinkShape, SourceShape}
 import com.typesafe.config.ConfigFactory
 import org.scalatest.{BeforeAndAfterAll, FunSuite, Matchers}
 
+import scala.concurrent.Await
 import scala.concurrent.duration._
-import scala.concurrent.{Await, Future}
 import scala.language.postfixOps
 
 class StreamsTest extends FunSuite with BeforeAndAfterAll with Matchers {
@@ -16,26 +16,28 @@ class StreamsTest extends FunSuite with BeforeAndAfterAll with Matchers {
   implicit val materializer = ActorMaterializer()
   implicit val ec = system.dispatcher
 
-  val source: Source[Int, NotUsed] = Source(1 to 10)
-  val flow: Flow[Int, Int, NotUsed] = Flow[Int].filter(_ % 2 == 0).map(_ * 2)
-  val sink: Sink[Int, Future[Int]] = Sink.fold[Int, Int](0)(_ + _)
-
   override protected def afterAll(): Unit = {
-    Await.result(system.terminate(), 1 second)
+    Await.result(system.terminate(), 3 seconds)
     ()
   }
 
   test("source") {
+    val source = Source(1 to 10)
     source.runFold(0)(_ + _) map { _ shouldBe 55 }
     source.runReduce(_ + _) map { _ shouldBe 55 }
   }
 
   test("source ~ sink") {
+    val source = Source(1 to 10)
+    val sink = Sink.fold[Int, Int](0)(_ + _)
     source.toMat(sink)(Keep.right).run map { _ shouldBe 55 }
     source.runWith(sink) map { _ shouldBe 55 }
   }
 
   test("source ~ flow ~ sink") {
+    val source = Source(1 to 10)
+    val flow = Flow[Int].filter(_ % 2 == 0).map(_ * 2)
+    val sink = Sink.fold[Int, Int](0)(_ + _)
     source.via(flow).toMat(sink)(Keep.right).run map { _ shouldBe 60 }
     source.via(flow).runWith(sink) map { _ shouldBe 60 }
     flow.runWith(source, sink)._2 map { _ shouldBe 60 }
