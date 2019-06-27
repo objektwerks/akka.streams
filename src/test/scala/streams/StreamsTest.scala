@@ -1,6 +1,5 @@
 package streams
 
-import akka.NotUsed
 import akka.actor.ActorSystem
 import akka.stream.scaladsl._
 import akka.stream.{ActorMaterializer, ClosedShape, SinkShape, SourceShape}
@@ -50,7 +49,7 @@ class StreamsTest extends FunSuite with BeforeAndAfterAll with Matchers {
     val sink = Sink.reduce[(Int, Int)]( (a, b) => (a._1 + a._2, b._1 + b._2) )
 
     val graph = RunnableGraph.fromGraph(
-      GraphDSL.create() { implicit builder: GraphDSL.Builder[NotUsed] =>
+      GraphDSL.create() { implicit builder =>
         import GraphDSL.Implicits._
 
         val broadcast = builder.add(Broadcast[Int](2))
