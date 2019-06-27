@@ -2,7 +2,7 @@ package streams
 
 import akka.actor.ActorSystem
 import akka.stream.scaladsl._
-import akka.stream.{ActorMaterializer, ClosedShape, FlowShape, SinkShape, SourceShape}
+import akka.stream._
 import com.typesafe.config.ConfigFactory
 import org.scalatest.{BeforeAndAfterAll, FunSuite, Matchers}
 
@@ -107,12 +107,12 @@ class StreamsTest extends FunSuite with BeforeAndAfterAll with Matchers {
   }
 
   test("sink graph") {
-    val sinkGraph = Sink.fromGraph(
-      GraphDSL.create() { implicit builder =>
-        import GraphDSL.Implicits._
+    val sink1 = Sink.reduce[Int](_ + _)
+    val sink2 = Sink.reduce[Int](_ + _)
 
-        val sink1 = Sink.reduce[Int](_ + _)
-        val sink2 = Sink.reduce[Int](_ + _)
+    val sinkGraph = Sink.fromGraph(
+      GraphDSL.create(sink1, sink2)((_, _)) { implicit builder => (sink1, sink2) =>
+        import GraphDSL.Implicits._
 
         val broadcast = builder.add(Broadcast[Int](2))
         broadcast ~> sink1
@@ -122,6 +122,11 @@ class StreamsTest extends FunSuite with BeforeAndAfterAll with Matchers {
       }
     )
     val source = Source(1 to 10)
-    source.runWith(sinkGraph)
+    val tuple = source.runWith(sinkGraph)
+    val future = for {
+      f1 <- tuple._1
+      f2 <- tuple._2
+    } yield f1 + f2
+    Await.result( future, 1 second) shouldBe 110
   }
 }
