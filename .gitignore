@@ -1,11 +1,6 @@
+.bloop
+.idea
 target/
 project/project/
 project/target/
-.idea
-build
-.classpath
-.project
-.settings
-org.scala-ide.sdt.core/META-INF/MANIFEST.MF
-org.scala-ide.sdt.update-site/site.xml
 .DS_Store
