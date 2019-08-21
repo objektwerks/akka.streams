@@ -16,7 +16,7 @@ class StreamsTest extends FunSuite with BeforeAndAfterAll with Matchers {
   implicit val ec = system.dispatcher
 
   override protected def afterAll(): Unit = {
-    Await.result(system.terminate(), 3 seconds)
+    Await.result(system.terminate, 3 seconds)
     ()
   }
 
