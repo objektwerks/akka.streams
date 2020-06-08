@@ -12,7 +12,6 @@ import scala.language.postfixOps
 
 class StreamsTest extends FunSuite with BeforeAndAfterAll with Matchers {
   implicit val system = ActorSystem.create("streams", ConfigFactory.load("test.conf"))
-  implicit val materializer = ActorMaterializer()
   implicit val ec = system.dispatcher
 
   override protected def afterAll(): Unit = {
