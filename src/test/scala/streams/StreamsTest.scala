@@ -4,13 +4,15 @@ import akka.actor.ActorSystem
 import akka.stream.scaladsl._
 import akka.stream._
 import com.typesafe.config.ConfigFactory
-import org.scalatest.{BeforeAndAfterAll, FunSuite, Matchers}
+import org.scalatest.funsuite.AnyFunSuite
+import org.scalatest.matchers.should.Matchers
+import org.scalatest.BeforeAndAfterAll
 
 import scala.concurrent.{Await, Future}
 import scala.concurrent.duration._
 import scala.language.postfixOps
 
-class StreamsTest extends FunSuite with BeforeAndAfterAll with Matchers {
+class StreamsTest extends AnyFunSuite with BeforeAndAfterAll with Matchers {
   implicit val system = ActorSystem.create("streams", ConfigFactory.load("test.conf"))
   implicit val ec = system.dispatcher
 
