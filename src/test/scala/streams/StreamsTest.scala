@@ -19,7 +19,7 @@ class StreamsTest extends AnyFunSuite with BeforeAndAfterAll with Matchers {
   implicit val ec = system.dispatcher
 
   override protected def afterAll(): Unit = {
-    Await.result(system.terminate, 3 seconds)
+    Await.result(system.terminate(), 3 seconds)
     ()
   }
 
@@ -32,7 +32,7 @@ class StreamsTest extends AnyFunSuite with BeforeAndAfterAll with Matchers {
   test("source ~ sink") {
     val source = Source(1 to 10)
     val sink = Sink.fold[Int, Int](0)(_ + _)
-    Await.result( source.toMat(sink)(Keep.right).run, 1 second ) shouldBe 55
+    Await.result( source.toMat(sink)(Keep.right).run(), 1 second ) shouldBe 55
     Await.result( source.runWith(sink), 1 second ) shouldBe 55
   }
 
@@ -40,7 +40,7 @@ class StreamsTest extends AnyFunSuite with BeforeAndAfterAll with Matchers {
     val source = Source(1 to 10)
     val flow = Flow[Int].filter(_ % 2 == 0).map(_ * 2)
     val sink = Sink.fold[Int, Int](0)(_ + _)
-    Await.result( source.via(flow).toMat(sink)(Keep.right).run, 1 second ) shouldBe 60
+    Await.result( source.via(flow).toMat(sink)(Keep.right).run(), 1 second ) shouldBe 60
     Await.result( source.via(flow).runWith(sink), 1 second ) shouldBe 60
     Await.result( flow.runWith(source, sink)._2, 1 second ) shouldBe 60
   }
@@ -56,7 +56,7 @@ class StreamsTest extends AnyFunSuite with BeforeAndAfterAll with Matchers {
         import GraphDSL.Implicits._
 
         val broadcast = builder.add(Broadcast[Int](2))
-        val zip = builder.add(Zip[Int, Int])
+        val zip = builder.add(Zip[Int, Int]())
 
         source ~> broadcast
         broadcast.out(0) ~> incrementer ~> zip.in0
@@ -66,7 +66,7 @@ class StreamsTest extends AnyFunSuite with BeforeAndAfterAll with Matchers {
         ClosedShape
       }
     )
-    Await.result( graph.run, 1 second ) shouldEqual( (144,31) )
+    Await.result( graph.run(), 1 second ) shouldEqual( (144,31) )
   }
 
   test("source graph") {
@@ -106,7 +106,7 @@ class StreamsTest extends AnyFunSuite with BeforeAndAfterAll with Matchers {
     )
     val source = Source(1 to 10)
     val sink = Sink.reduce[Int](_ + _)
-    Await.result( source.via(flowGraph).toMat(sink)(Keep.right).run, 1 second ) shouldBe 130
+    Await.result( source.via(flowGraph).toMat(sink)(Keep.right).run(), 1 second ) shouldBe 130
   }
 
   test("sink graph") {
