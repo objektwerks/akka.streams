@@ -1,6 +1,6 @@
 Akka Streams
 ------------
->This project contains Akka Streams feature tests.
+>Akka Stream feature tests.
 
 Test
 ----
