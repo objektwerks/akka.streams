@@ -9,24 +9,27 @@ import org.jfree.chart.renderer.xy.XYLineAndShapeRenderer
 import org.jfree.data.time.{TimeSeries, TimeSeriesCollection}
 
 object StreamingChart {
-  def build: JFreeChart = {
-    val xyPlot = new XYPlot()
+  def apply(): StreamingChart = new StreamingChart()
+}
 
-    val timeSeries = new TimeSeriesCollection( new TimeSeries("Streaming Chart") )
-    xyPlot.setDataset(0, timeSeries)
+class StreamingChart {
+  val xyPlot = new XYPlot()
 
-    val renderer = new XYLineAndShapeRenderer()
-    renderer.setDefaultShapesVisible(true)
-    renderer.setDefaultItemLabelsVisible(true)
-    xyPlot.setRenderer(0, renderer)
+  val timeSeries = new TimeSeries("Streaming Chart")
+  val timeSeriesCollection = new TimeSeriesCollection( timeSeries )
+  xyPlot.setDataset(0, timeSeriesCollection)
 
-    val xAxis = new DateAxis("Time")
-    xAxis.setDateFormatOverride( new SimpleDateFormat("H:mm:ss") )
-    xyPlot.setDomainAxis(0, xAxis)
+  val renderer = new XYLineAndShapeRenderer()
+  renderer.setDefaultShapesVisible(true)
+  renderer.setDefaultItemLabelsVisible(true)
+  xyPlot.setRenderer(0, renderer)
 
-    val yAxis = new NumberAxis("Values")
-    xyPlot.setRangeAxis(yAxis)
+  val xAxis = new DateAxis("Time")
+  xAxis.setDateFormatOverride( new SimpleDateFormat("H:mm:ss") )
+  xyPlot.setDomainAxis(0, xAxis)
 
-    new JFreeChart("Streaming Chart", JFreeChart.DEFAULT_TITLE_FONT, xyPlot, true)
-  }
+  val yAxis = new NumberAxis("Values")
+  xyPlot.setRangeAxis(yAxis)
+
+  val jFreeChart = new JFreeChart("Streaming Chart", JFreeChart.DEFAULT_TITLE_FONT, xyPlot, true)
 }
