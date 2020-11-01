@@ -48,7 +48,7 @@ object StreamingChartApp {
 
   def addOrUpdate(timeSeries: TimeSeries): Runnable = new Runnable() {
     override def run(): Unit = {
-      val item = new TimeSeriesDataItem( new Millisecond(), Random.nextDouble())
+      val item = new TimeSeriesDataItem( new Millisecond(), Random.nextDouble() )
       timeSeries.addOrUpdate(item)
       ()
     }
