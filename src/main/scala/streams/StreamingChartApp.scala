@@ -1,5 +1,10 @@
 package streams
 
+import akka.actor.ActorSystem
+import akka.stream.scaladsl.Source
+
+import com.typesafe.config.ConfigFactory
+
 import java.awt.{BorderLayout, EventQueue}
 
 import javax.swing.{JFrame, WindowConstants}
@@ -12,8 +17,6 @@ import org.jfree.data.time.Millisecond
 import scala.concurrent.duration._
 import scala.language.postfixOps
 import scala.util.Random
-import akka.actor.ActorSystem
-import com.typesafe.config.ConfigFactory
 
 object StreamingChartApp {
   def main(args: Array[String]): Unit = {
@@ -37,8 +40,9 @@ object StreamingChartApp {
       }
     })
 
-    // Source.tick(1 second, 300 milli, Done).runForeach { addOrUpdate(timeSeries) }
-    val cancellable = system.scheduler.scheduleAtFixedRate(300 millis, 300 milli)( addOrUpdate(timeSeries) )
+    Source.tick(1 second, 300 milli, addOrUpdate(timeSeries)).run()
+
+    val cancellable = system.scheduler.scheduleAtFixedRate(1 second, 600 milli)( addOrUpdate(timeSeries) )
     println(cancellable.toString)
   }
 
