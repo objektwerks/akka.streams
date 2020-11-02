@@ -1,6 +1,7 @@
 package streams
 
 import akka.actor.ActorSystem
+import akka.stream.scaladsl._
 
 import com.typesafe.config.ConfigFactory
 
@@ -41,12 +42,13 @@ object StreamingChartApp {
       }
     })
 
-    // Does not work!
-    import akka.stream.scaladsl.Source
-    Source.tick(500 milli, 500 milli, addOrUpdate(timeSeries)).run()
+    // 1. Update time series with akka streams.
+    Source.tick(1 second, 1 second, ()).map( _ => addOrUpdate(timeSeries) ).runWith(Sink.ignore)
 
-    val cancellable = system.scheduler.scheduleWithFixedDelay(1 second, 1 second)( addOrUpdateAsRunnable(timeSeries) )
+    // 2. Update time series with akka scheduler.
+    val cancellable = system.scheduler.scheduleWithFixedDelay(2 seconds, 2 seconds)( addOrUpdateAsRunnable(timeSeries) )
 
+    // Warning: The Swing UI hangs at shutdown. Use Control-C from commandline.
     sys.addShutdownHook {
       cancellable.cancel()
       system.terminate()
