@@ -23,13 +23,15 @@ object StreamingChartApp {
     implicit val system = ActorSystem.create("streaming-chart-app", ConfigFactory.load("app.conf"))
     implicit val dispatcher = system.dispatcher
 
-    val chart = StreamingChart()
-    val timeSeries = chart.timeSeries
-    val chartPanel = new ChartPanel( chart.jFreeChart )
+    val timeSeries = new TimeSeries("Streaming Chart")
 
     EventQueue.invokeLater( new Runnable() {
       override def run(): Unit = {
         setLookAndFeel(getSystemLookAndFeelClassName)
+
+        val chart = StreamingChart(timeSeries)
+        val chartPanel = new ChartPanel( chart.jFreeChart )
+
         val frame = new JFrame()
         frame.setTitle("Streaming Chart App")
         frame.setSize(600, 600)

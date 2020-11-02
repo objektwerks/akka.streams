@@ -9,13 +9,12 @@ import org.jfree.chart.renderer.xy.XYLineAndShapeRenderer
 import org.jfree.data.time.{TimeSeries, TimeSeriesCollection}
 
 object StreamingChart {
-  def apply(): StreamingChart = new StreamingChart()
+  def apply(timeSeries: TimeSeries): StreamingChart = new StreamingChart(timeSeries)
 }
 
-class StreamingChart {
+class StreamingChart(timeSeries: TimeSeries) {
   val xyPlot = new XYPlot()
 
-  val timeSeries = new TimeSeries("Streaming Chart")
   val timeSeriesCollection = new TimeSeriesCollection( timeSeries )
   xyPlot.setDataset(0, timeSeriesCollection)
 
