@@ -42,10 +42,10 @@ object StreamingChartApp {
     })
 
     // Does not work!
-    // import akka.stream.scaladsl.Source
-    // Source.tick(1 second, 300 milli, addOrUpdate(timeSeries)).run()
+    import akka.stream.scaladsl.Source
+    Source.tick(500 milli, 500 milli, addOrUpdate(timeSeries)).run()
 
-    val cancellable = system.scheduler.scheduleWithFixedDelay(1 second, 1 second)( addOrUpdate(timeSeries) )
+    val cancellable = system.scheduler.scheduleWithFixedDelay(1 second, 1 second)( addOrUpdateAsRunnable(timeSeries) )
 
     sys.addShutdownHook {
       cancellable.cancel()
@@ -55,10 +55,14 @@ object StreamingChartApp {
     ()
   }
 
-  def addOrUpdate(timeSeries: TimeSeries): Runnable = new Runnable() {
+  def addOrUpdate(timeSeries: TimeSeries): Unit = {
+    timeSeries.addOrUpdate( new TimeSeriesDataItem( new Millisecond(), Random.nextDouble() ) )
+    ()
+  }
+
+  def addOrUpdateAsRunnable(timeSeries: TimeSeries): Runnable = new Runnable() {
     override def run(): Unit = {
-      val item = new TimeSeriesDataItem( new Millisecond(), Random.nextDouble() )
-      timeSeries.addOrUpdate(item)
+      timeSeries.addOrUpdate( new TimeSeriesDataItem( new Millisecond(), Random.nextDouble() ) )
       ()
     }
   }
