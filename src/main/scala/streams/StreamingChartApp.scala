@@ -19,11 +19,37 @@ import scala.language.postfixOps
 import scala.util.Random
 
 object StreamingChartApp {
+  private def addOrUpdate(timeSeries: TimeSeries): Unit = {
+    timeSeries.addOrUpdate( new TimeSeriesDataItem( new Millisecond(), Random.nextDouble() ) )
+    ()
+  }
+
+  private def addOrUpdateAsRunnable(timeSeries: TimeSeries): Runnable = new Runnable() {
+    override def run(): Unit = {
+      timeSeries.addOrUpdate( new TimeSeriesDataItem( new Millisecond(), Random.nextDouble() ) )
+      ()
+    }
+  }
+
   def main(args: Array[String]): Unit = {
     implicit val system = ActorSystem.create("streaming-chart-app", ConfigFactory.load("app.conf"))
     implicit val dispatcher = system.dispatcher
 
     val timeSeries = new TimeSeries("Time")
+
+    // 1. Update time series with akka stream.
+    Source.tick(1 second, 1 second, ()).map( _ => addOrUpdate(timeSeries) ).runWith(Sink.ignore)
+
+    // 2. Update time series with akka scheduler.
+    val cancellable = system.scheduler.scheduleWithFixedDelay(2 seconds, 2 seconds)( addOrUpdateAsRunnable(timeSeries) )
+
+    // Warning: The app fails to terminate completely due to an Sbt conflict.
+    // Use Control-C from commandline. Or select the Java app and Quit menu item.
+    sys.addShutdownHook {
+      cancellable.cancel()
+      system.terminate()
+      ()
+    }
 
     EventQueue.invokeLater( new Runnable() {
       override def run(): Unit = {
@@ -42,31 +68,5 @@ object StreamingChartApp {
         frame.setVisible(true)
       }
     })
-
-    // 1. Update time series with akka streams.
-    Source.tick(1 second, 1 second, ()).map( _ => addOrUpdate(timeSeries) ).runWith(Sink.ignore)
-
-    // 2. Update time series with akka scheduler.
-    val cancellable = system.scheduler.scheduleWithFixedDelay(2 seconds, 2 seconds)( addOrUpdateAsRunnable(timeSeries) )
-
-    // Warning: The Swing UI hangs at shutdown. Use Control-C from commandline.
-    sys.addShutdownHook {
-      cancellable.cancel()
-      system.terminate()
-      ()
-    }
-    ()
-  }
-
-  def addOrUpdate(timeSeries: TimeSeries): Unit = {
-    timeSeries.addOrUpdate( new TimeSeriesDataItem( new Millisecond(), Random.nextDouble() ) )
-    ()
-  }
-
-  def addOrUpdateAsRunnable(timeSeries: TimeSeries): Runnable = new Runnable() {
-    override def run(): Unit = {
-      timeSeries.addOrUpdate( new TimeSeriesDataItem( new Millisecond(), Random.nextDouble() ) )
-      ()
-    }
   }
 }
