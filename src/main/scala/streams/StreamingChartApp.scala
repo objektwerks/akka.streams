@@ -22,7 +22,7 @@ object StreamingChartApp {
     implicit val system = ActorSystem.create("streaming-chart-app", ConfigFactory.load("app.conf"))
     implicit val dispatcher = system.dispatcher
 
-    val timeSeries = new TimeSeries("Streaming Chart")
+    val timeSeries = new TimeSeries("Time")
 
     EventQueue.invokeLater( new Runnable() {
       override def run(): Unit = {
@@ -45,7 +45,7 @@ object StreamingChartApp {
     // import akka.stream.scaladsl.Source
     // Source.tick(1 second, 300 milli, addOrUpdate(timeSeries)).run()
 
-    val cancellable = system.scheduler.scheduleAtFixedRate(1 second, 1 second)( addOrUpdate(timeSeries) )
+    val cancellable = system.scheduler.scheduleWithFixedDelay(1 second, 1 second)( addOrUpdate(timeSeries) )
 
     sys.addShutdownHook {
       cancellable.cancel()
