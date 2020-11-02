@@ -34,7 +34,7 @@ object StreamingChartApp {
 
         val frame = new JFrame()
         frame.setTitle("Streaming Chart App")
-        frame.setSize(600, 600)
+        frame.setSize(900, 600)
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE)
         frame.setLocationRelativeTo(null)
         frame.add(chartPanel, BorderLayout.CENTER)
@@ -44,7 +44,7 @@ object StreamingChartApp {
 
     Source.tick(1 second, 300 milli, addOrUpdate(timeSeries)).run()
 
-    val cancellable = system.scheduler.scheduleAtFixedRate(1 second, 600 milli)( addOrUpdate(timeSeries) )
+    val cancellable = system.scheduler.scheduleAtFixedRate(2 seconds, 600 milli)( addOrUpdate(timeSeries) )
     println(cancellable.toString)
   }
 
