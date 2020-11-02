@@ -45,11 +45,11 @@ object StreamingChartApp {
     // import akka.stream.scaladsl.Source
     // Source.tick(1 second, 300 milli, addOrUpdate(timeSeries)).run()
 
-    val cancellable = system.scheduler.scheduleAtFixedRate(2 seconds, 600 milli)( addOrUpdate(timeSeries) )
+    val cancellable = system.scheduler.scheduleAtFixedRate(1 second, 1 second)( addOrUpdate(timeSeries) )
 
     sys.addShutdownHook {
-      system.terminate()
       cancellable.cancel()
+      system.terminate()
       ()
     }
     ()
