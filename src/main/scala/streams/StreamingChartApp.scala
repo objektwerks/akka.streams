@@ -1,7 +1,6 @@
 package streams
 
 import akka.actor.ActorSystem
-import akka.stream.scaladsl.Source
 
 import com.typesafe.config.ConfigFactory
 
@@ -42,10 +41,18 @@ object StreamingChartApp {
       }
     })
 
-    Source.tick(1 second, 300 milli, addOrUpdate(timeSeries)).run()
+    // Does not work!
+    // import akka.stream.scaladsl.Source
+    // Source.tick(1 second, 300 milli, addOrUpdate(timeSeries)).run()
 
     val cancellable = system.scheduler.scheduleAtFixedRate(2 seconds, 600 milli)( addOrUpdate(timeSeries) )
-    println(cancellable.toString)
+
+    sys.addShutdownHook {
+      system.terminate()
+      cancellable.cancel()
+      ()
+    }
+    ()
   }
 
   def addOrUpdate(timeSeries: TimeSeries): Runnable = new Runnable() {
