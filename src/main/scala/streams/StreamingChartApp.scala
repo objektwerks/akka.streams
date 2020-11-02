@@ -7,7 +7,7 @@ import com.typesafe.config.ConfigFactory
 
 import java.awt.{BorderLayout, EventQueue}
 
-import javax.swing.{JFrame, WindowConstants}
+import javax.swing.{BorderFactory, JFrame, WindowConstants}
 import javax.swing.UIManager._
 
 import org.jfree.chart.ChartPanel
@@ -31,6 +31,7 @@ object StreamingChartApp {
 
         val chart = StreamingChart(timeSeries)
         val chartPanel = new ChartPanel( chart.jFreeChart )
+        chartPanel.setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15))
 
         val frame = new JFrame()
         frame.setTitle("Streaming Chart App")

@@ -23,7 +23,7 @@ class StreamingChart(timeSeries: TimeSeries) {
   renderer.setDefaultItemLabelsVisible(true)
   xyPlot.setRenderer(0, renderer)
 
-  val xAxis = new DateAxis("Time")
+  val xAxis = new DateAxis()
   xAxis.setDateFormatOverride( new SimpleDateFormat("H:mm:ss") )
   xyPlot.setDomainAxis(0, xAxis)
 
