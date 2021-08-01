@@ -8,7 +8,7 @@ libraryDependencies ++= {
     "com.typesafe.akka" %% "akka-stream" % akkaVersion,
     "com.typesafe.akka" %% "akka-slf4j" % akkaVersion,
     "org.jfree" % "jfreechart" % "1.5.3",
-    "ch.qos.logback" % "logback-classic" % "1.2.3",
+    "ch.qos.logback" % "logback-classic" % "1.2.5",
     "org.scalatest" %% "scalatest" % "3.2.9" % Test
   )
 }
