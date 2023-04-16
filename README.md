@@ -14,4 +14,5 @@ Test
 Run
 ---
 >Runs StreamingChartApp, which dynamically updates a time series chart via an AkkaStream source and Akka scheduler.
+>**WARNING*** The akka system is auto shutting down, now! So the Swing UI pops up and then vanishes. Umm...
 1. sbt clean run
