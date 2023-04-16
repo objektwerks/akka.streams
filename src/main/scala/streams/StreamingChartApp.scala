@@ -44,7 +44,7 @@ object StreamingChartApp {
     def addOrUpdate(timeSeries: TimeSeries): Unit =
       timeSeries.addOrUpdate( new TimeSeriesDataItem( new Millisecond(), Random.nextDouble() ) )
 
-    def addOrUpdateAsRunnable(timeSeries: TimeSeries): Runnable =
+    def asyncAddOrUpdate(timeSeries: TimeSeries): Runnable =
       () => timeSeries.addOrUpdate( new TimeSeriesDataItem( new Millisecond(), Random.nextDouble() ) )
 
     // 1. Update time series with akka stream.
@@ -56,7 +56,7 @@ object StreamingChartApp {
     // 2. Update time series with akka scheduler.
     system
       .scheduler
-      .scheduleWithFixedDelay(6 seconds, 6 seconds)( addOrUpdateAsRunnable(timeSeries) )
+      .scheduleWithFixedDelay(6 seconds, 6 seconds)( asyncAddOrUpdate(timeSeries) )
 
     sys.addShutdownHook {
       Await.result(system.terminate(), 30 seconds)
