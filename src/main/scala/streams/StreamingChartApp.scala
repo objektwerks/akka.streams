@@ -58,7 +58,6 @@ object StreamingChartApp {
     sys.addShutdownHook {
       cancellable.cancel()
       system.terminate()
-      ()
     }
   }
 }
