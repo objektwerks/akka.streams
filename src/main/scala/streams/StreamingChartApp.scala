@@ -14,28 +14,14 @@ import org.jfree.chart.ChartPanel
 import org.jfree.data.time.{TimeSeries, TimeSeriesDataItem}
 import org.jfree.data.time.Millisecond
 
+import scala.concurrent.Await
 import scala.concurrent.duration._
 import scala.language.postfixOps
 import scala.util.Random
 
 object StreamingChartApp {
   def main(args: Array[String]): Unit = {
-    def addOrUpdate(timeSeries: TimeSeries): Unit =
-      timeSeries.addOrUpdate( new TimeSeriesDataItem( new Millisecond(), Random.nextDouble() ) )
-
-    def addOrUpdateAsRunnable(timeSeries: TimeSeries): Runnable =
-      () => timeSeries.addOrUpdate( new TimeSeriesDataItem( new Millisecond(), Random.nextDouble() ) )
-
-    implicit val system = ActorSystem.create("streaming-chart-app", ConfigFactory.load("app.conf"))
-    implicit val dispatcher = system.dispatcher
-
     val timeSeries = new TimeSeries("Time")
-
-    // 1. Update time series with akka stream.
-    Source.tick(1 second, 1 second, ()).map( _ => addOrUpdate(timeSeries) ).runWith(Sink.ignore)
-
-    // 2. Update time series with akka scheduler.
-    val cancellable = system.scheduler.scheduleWithFixedDelay(2 seconds, 2 seconds)( addOrUpdateAsRunnable(timeSeries) )
 
     EventQueue.invokeLater( () => {
         setLookAndFeel(getSystemLookAndFeelClassName)
@@ -53,9 +39,28 @@ object StreamingChartApp {
         frame.setVisible(true)
       })
 
+    implicit val system = ActorSystem.create("streaming-chart-app", ConfigFactory.load("app.conf"))
+    implicit val dispatcher = system.dispatcher
+
+    def addOrUpdate(timeSeries: TimeSeries): Unit =
+      timeSeries.addOrUpdate( new TimeSeriesDataItem( new Millisecond(), Random.nextDouble() ) )
+
+    def addOrUpdateAsRunnable(timeSeries: TimeSeries): Runnable =
+      () => timeSeries.addOrUpdate( new TimeSeriesDataItem( new Millisecond(), Random.nextDouble() ) )
+
+    // 1. Update time series with akka stream.
+    Source
+      .tick(1 second, 1 second, ())
+      .map( _ => addOrUpdate(timeSeries) )
+      .runWith(Sink.ignore)
+
+    // 2. Update time series with akka scheduler.
+    system
+      .scheduler
+      .scheduleWithFixedDelay(2 seconds, 2 seconds)( addOrUpdateAsRunnable(timeSeries) )
+
     sys.addShutdownHook {
-      cancellable.cancel()
-      system.terminate()
+      Await.result(system.terminate(), 30 seconds)
     }
   }
 }
