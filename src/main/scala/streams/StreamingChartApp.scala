@@ -20,17 +20,11 @@ import scala.util.Random
 
 object StreamingChartApp {
   def main(args: Array[String]): Unit = {
-    def addOrUpdate(timeSeries: TimeSeries): Unit = {
+    def addOrUpdate(timeSeries: TimeSeries): Unit =
       timeSeries.addOrUpdate( new TimeSeriesDataItem( new Millisecond(), Random.nextDouble() ) )
-      ()
-    }
 
-    def addOrUpdateAsRunnable(timeSeries: TimeSeries): Runnable = new Runnable() {
-      override def run(): Unit = {
-        timeSeries.addOrUpdate( new TimeSeriesDataItem( new Millisecond(), Random.nextDouble() ) )
-        ()
-      }
-    }
+    def addOrUpdateAsRunnable(timeSeries: TimeSeries): Runnable =
+      () => timeSeries.addOrUpdate( new TimeSeriesDataItem( new Millisecond(), Random.nextDouble() ) )
 
     implicit val system = ActorSystem.create("streaming-chart-app", ConfigFactory.load("app.conf"))
     implicit val dispatcher = system.dispatcher
