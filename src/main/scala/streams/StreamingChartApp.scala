@@ -50,14 +50,14 @@ object StreamingChartApp {
 
     // 1. Update time series with akka stream.
     Source
-      .tick(1 second, 1 second, ())
+      .tick(3 second, 3 second, ())
       .map( _ => addOrUpdate(timeSeries) )
       .runWith(Sink.ignore)
 
     // 2. Update time series with akka scheduler.
     system
       .scheduler
-      .scheduleWithFixedDelay(2 seconds, 2 seconds)( addOrUpdateAsRunnable(timeSeries) )
+      .scheduleWithFixedDelay(6 seconds, 6 seconds)( addOrUpdateAsRunnable(timeSeries) )
 
     sys.addShutdownHook {
       Await.result(system.terminate(), 30 seconds)
