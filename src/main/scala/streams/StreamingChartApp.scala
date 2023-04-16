@@ -43,8 +43,6 @@ object StreamingChartApp {
     // 2. Update time series with akka scheduler.
     val cancellable = system.scheduler.scheduleWithFixedDelay(2 seconds, 2 seconds)( addOrUpdateAsRunnable(timeSeries) )
 
-    // Warning: The app fails to terminate completely due to an Sbt conflict.
-    // Use Control-C from commandline. Or select the Java app and Quit menu item.
     sys.addShutdownHook {
       cancellable.cancel()
       system.terminate()
