@@ -37,8 +37,7 @@ object StreamingChartApp {
     // 2. Update time series with akka scheduler.
     val cancellable = system.scheduler.scheduleWithFixedDelay(2 seconds, 2 seconds)( addOrUpdateAsRunnable(timeSeries) )
 
-    EventQueue.invokeLater( new Runnable() {
-      override def run(): Unit = {
+    EventQueue.invokeLater( () => {
         setLookAndFeel(getSystemLookAndFeelClassName)
 
         val chart = StreamingChart(timeSeries)
@@ -52,8 +51,7 @@ object StreamingChartApp {
         frame.setLocationRelativeTo(null)
         frame.add(chartPanel, BorderLayout.CENTER)
         frame.setVisible(true)
-      }
-    })
+      })
 
     sys.addShutdownHook {
       cancellable.cancel()
