@@ -21,6 +21,8 @@ import scala.util.Random
 
 object StreamingChartApp {
   def main(args: Array[String]): Unit = {
+    implicit val system = ActorSystem.create("streaming-chart-app", ConfigFactory.load("app.conf"))
+    implicit val dispatcher = system.dispatcher
     val timeSeries = new TimeSeries("Time")
 
     EventQueue.invokeLater( () => {
@@ -38,9 +40,6 @@ object StreamingChartApp {
         frame.add(chartPanel, BorderLayout.CENTER)
         frame.setVisible(true)
       })
-
-    implicit val system = ActorSystem.create("streaming-chart-app", ConfigFactory.load("app.conf"))
-    implicit val dispatcher = system.dispatcher
 
     def addOrUpdate(timeSeries: TimeSeries): Unit =
       timeSeries.addOrUpdate( new TimeSeriesDataItem( new Millisecond(), Random.nextDouble() ) )
