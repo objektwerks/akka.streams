@@ -58,9 +58,8 @@ object StreamingChartApp {
       .scheduleWithFixedDelay(4 seconds, 4 seconds)( asyncAddOrUpdate(timeSeries) )
 
     sys.addShutdownHook {
-      println("*** App shutting down ...")
       system.terminate()
-      println("*** App shutdown.")
+      println("*** App terminated.")
     }
 
     Thread.currentThread().join()
