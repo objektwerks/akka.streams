@@ -14,7 +14,6 @@ import org.jfree.chart.ChartPanel
 import org.jfree.data.time.{TimeSeries, TimeSeriesDataItem}
 import org.jfree.data.time.Millisecond
 
-import scala.concurrent.Await
 import scala.concurrent.duration._
 import scala.language.postfixOps
 import scala.util.Random
@@ -49,18 +48,18 @@ object StreamingChartApp {
 
     // 1. Update time series with akka stream.
     Source
-      .tick(3 second, 3 second, ())
+      .tick(2 second, 2 second, ())
       .map( _ => addOrUpdate(timeSeries) )
       .runWith(Sink.ignore)
 
     // 2. Update time series with akka scheduler.
     system
       .scheduler
-      .scheduleWithFixedDelay(6 seconds, 6 seconds)( asyncAddOrUpdate(timeSeries) )
+      .scheduleWithFixedDelay(4 seconds, 4 seconds)( asyncAddOrUpdate(timeSeries) )
 
     sys.addShutdownHook {
       println("*** App shutting down ...")
-      Await.result(system.terminate(), 30 seconds)
+      system.terminate()
       println("*** App shutdown.")
     }
 
