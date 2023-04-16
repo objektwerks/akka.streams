@@ -62,6 +62,6 @@ object StreamingChartApp {
       println("*** App terminated.")
     }
 
-    Thread.currentThread().join()
+    Thread.currentThread().join() // Prevents Akka System from terminating!
   }
 }
