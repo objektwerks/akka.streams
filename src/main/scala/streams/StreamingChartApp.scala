@@ -19,19 +19,19 @@ import scala.language.postfixOps
 import scala.util.Random
 
 object StreamingChartApp {
-  private def addOrUpdate(timeSeries: TimeSeries): Unit = {
-    timeSeries.addOrUpdate( new TimeSeriesDataItem( new Millisecond(), Random.nextDouble() ) )
-    ()
-  }
-
-  private def addOrUpdateAsRunnable(timeSeries: TimeSeries): Runnable = new Runnable() {
-    override def run(): Unit = {
+  def main(args: Array[String]): Unit = {
+    def addOrUpdate(timeSeries: TimeSeries): Unit = {
       timeSeries.addOrUpdate( new TimeSeriesDataItem( new Millisecond(), Random.nextDouble() ) )
       ()
     }
-  }
 
-  def main(args: Array[String]): Unit = {
+    def addOrUpdateAsRunnable(timeSeries: TimeSeries): Runnable = new Runnable() {
+      override def run(): Unit = {
+        timeSeries.addOrUpdate( new TimeSeriesDataItem( new Millisecond(), Random.nextDouble() ) )
+        ()
+      }
+    }
+
     implicit val system = ActorSystem.create("streaming-chart-app", ConfigFactory.load("app.conf"))
     implicit val dispatcher = system.dispatcher
 
@@ -42,12 +42,6 @@ object StreamingChartApp {
 
     // 2. Update time series with akka scheduler.
     val cancellable = system.scheduler.scheduleWithFixedDelay(2 seconds, 2 seconds)( addOrUpdateAsRunnable(timeSeries) )
-
-    sys.addShutdownHook {
-      cancellable.cancel()
-      system.terminate()
-      ()
-    }
 
     EventQueue.invokeLater( new Runnable() {
       override def run(): Unit = {
@@ -66,5 +60,11 @@ object StreamingChartApp {
         frame.setVisible(true)
       }
     })
+
+    sys.addShutdownHook {
+      cancellable.cancel()
+      system.terminate()
+      ()
+    }
   }
 }
