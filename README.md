@@ -11,7 +11,8 @@ Run
 1. sbt clean run
 >Multiple main classes detected. Select one to run:
 1. objektwerks.ActorApp
-2. objektwerks.StreamingChartApp
+2. objektwerks.FutureApp
+3. objektwerks.StreamingChartApp
 
 Resources
 ---------
