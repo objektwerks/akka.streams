@@ -20,7 +20,7 @@ final class Worker(id: Int) extends Actor with ActorLogging {
   log.info(s"*** worker actor $id intialized")
 
   def receive: Receive = {
-    case work @ Work(id) => log.info(s"*** name: ${context.self.path.name} id: $id")
+    case work @ Work(id) => log.info(s"*** name: ${context.self.path.name} id: $id working ...")
   }
 }
 
