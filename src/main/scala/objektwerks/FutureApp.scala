@@ -23,7 +23,7 @@ object FutureApp {
     Source(1 to numbers)
       .mapAsync(parallelism) { number =>
         Future { // simulate async io
-          println(s"*** number squared: ${number * number}")
+          println(s"*** $number squared = ${number * number}")
         }
       }
       .runWith(Sink.ignore)
