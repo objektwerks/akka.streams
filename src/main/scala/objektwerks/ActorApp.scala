@@ -49,11 +49,11 @@ object ActorApp {
 
     implicit val system: ActorSystem = ActorSystem.create("akka-streams-kafka", ConfigFactory.load("app.conf"))
     implicit val dispatcher: ExecutionContext = system.dispatcher
+    implicit val timeout = Timeout(30 seconds)
     val manager = system.actorOf(Props(classOf[Manager], workers), name = "manager")
     println("*** akka system started")
 
     println(s"*** sourcing work for $workers actor [worker] routees, with parallelism set to: $parallelism ...")
-    implicit val askTimeout = Timeout(30 seconds)
     Source(0 until workers)
       .mapAsync(parallelism) { worker =>
         (manager ? Work(worker) ).mapTo[Processed]
