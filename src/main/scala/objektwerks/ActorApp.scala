@@ -21,15 +21,14 @@ final class Worker(id: Int) extends Actor with ActorLogging {
   log.info(s"*** worker actor $id intialized")
 
   def receive: Receive = {
-    case work @ Work(id) =>
-      log.info(s"*** name: ${context.self.path.name} id: $id")
+    case work @ Work(id) => log.info(s"*** name: ${context.self.path.name} id: $id")
   }
 }
 
 final class Manager(workers: Int) extends Actor with ActorLogging {
   val router = {
-    val routees = (1 to workers).map { id =>
-      ActorRefRoutee( context.actorOf(Props(classOf[Worker], id), name = s"worker-$id") )
+    val routees = (1 to workers).map { worker =>
+      ActorRefRoutee( context.actorOf(Props(classOf[Worker], worker), name = s"worker-$worker") )
     }
     Router(RoundRobinRoutingLogic(), routees)
   }
