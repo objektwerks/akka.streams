@@ -8,8 +8,10 @@ Test
 
 Run
 ---
->Runs StreamingChartApp, which dynamically updates a time series chart via an Akka Stream source and Akka scheduler.
 1. sbt clean run
+>Multiple main classes detected. Select one to run:
+1. objektwerks.ActorApp
+2. objektwerks.StreamingChartApp
 
 Resources
 ---------
