@@ -1,4 +1,4 @@
-package streams
+package objektwerks
 
 import akka.actor.ActorSystem
 import akka.stream.scaladsl._
