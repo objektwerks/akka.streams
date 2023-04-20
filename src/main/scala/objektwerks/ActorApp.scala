@@ -45,7 +45,7 @@ final class Manager(workers: Int) extends Actor with ActorLogging {
 object ActorApp {
   def main(args: Array[String]): Unit = {
     val workers = 10
-    val parallelism = 8
+    val parallelism = Runtime.getRuntime.availableProcessors
 
     implicit val system: ActorSystem = ActorSystem.create("akka-streams-kafka", ConfigFactory.load("app.conf"))
     implicit val dispatcher: ExecutionContext = system.dispatcher
