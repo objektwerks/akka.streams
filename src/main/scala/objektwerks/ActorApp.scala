@@ -48,7 +48,7 @@ object ActorApp {
 
     implicit val system: ActorSystem = ActorSystem.create("akka-streams-kafka", ConfigFactory.load("app.conf"))
     implicit val dispatcher: ExecutionContext = system.dispatcher
-    implicit val timeout = Timeout(30 seconds)
+    implicit val timeout = Timeout(10 seconds)
     val manager = system.actorOf(Props(classOf[Manager], workers), name = "manager")
     println("*** akka system started")
 
