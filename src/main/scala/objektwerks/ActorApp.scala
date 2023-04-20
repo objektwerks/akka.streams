@@ -1,6 +1,5 @@
 package objektwerks
 
-import akka.Done
 import akka.actor.{Actor, ActorLogging, ActorSystem, Props}
 import akka.pattern.ask
 import akka.routing.{ActorRefRoutee, RoundRobinRoutingLogic, Router}
@@ -62,13 +61,12 @@ object ActorApp {
         println(s"*** processed work from worker: ${processed.worker}")
       }
       .runWith(Sink.ignore)
-    println(s"*** once consumer records have been printed, depress RETURN key to shutdown app")
+    println(s"*** once all work results have been printed, depress RETURN key to shutdown app")
 
     StdIn.readLine()
 
-    Await.result(system.terminate(), 30 seconds)
+    Await.result(system.terminate(), 10 seconds)
     println("*** akka system terminated")
-
     println("*** see log at /target/app.log")
     println("*** app shutdown")
   }
