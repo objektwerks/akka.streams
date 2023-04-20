@@ -59,7 +59,7 @@ object ActorApp {
         (manager ? Work(worker) ).mapTo[Processed]
       }
       .map { processed =>
-        println(s"*** processed > work from worker: ${processed.worker}")
+        println(s"*** processed work from worker: ${processed.worker}")
       }
       .runWith(Sink.ignore)
     println(s"*** once consumer records have been printed, depress RETURN key to shutdown app")
