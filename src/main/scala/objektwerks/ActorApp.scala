@@ -53,7 +53,7 @@ object ActorApp {
     println("*** akka system started")
 
     println(s"*** sourcing work for $workers actor [worker] routees, with parallelism set to: $parallelism ...")
-    Source(0 until workers)
+    Source(1 to workers)
       .mapAsync(parallelism) { worker =>
         (manager ? Work(worker) ).mapTo[Processed]
       }
