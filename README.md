@@ -1,6 +1,6 @@
 Akka Streams
 ------------
->Akka Stream feature tests.
+>Akka Stream feature apps and tests.
 
 Test
 ----
