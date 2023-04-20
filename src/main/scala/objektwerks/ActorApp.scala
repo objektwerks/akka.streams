@@ -35,10 +35,10 @@ final class Manager(workers: Int) extends Actor with ActorLogging {
   log.info("*** manager actor intialized")
 
   def receive: Receive = {
-    case work @ Work(id) =>
+    case work @ Work(worker) =>
       log.info(s"*** manager actor received work: $work")
       router.route(work, sender)
-      sender ! Processed(id)
+      sender ! Processed(worker)
   }
 }
 
