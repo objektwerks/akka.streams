@@ -1,14 +1,14 @@
 package objektwerks
 
 import akka.actor.ActorSystem
-import akka.stream.scaladsl._
 import akka.stream._
+import akka.stream.scaladsl._
 
 import com.typesafe.config.ConfigFactory
 
+import org.scalatest.BeforeAndAfterAll
 import org.scalatest.funsuite.AnyFunSuite
 import org.scalatest.matchers.should.Matchers
-import org.scalatest.BeforeAndAfterAll
 
 import scala.concurrent.{Await, Future}
 import scala.concurrent.duration._
