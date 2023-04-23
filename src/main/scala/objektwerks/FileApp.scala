@@ -12,11 +12,11 @@ import scala.language.postfixOps
 
 object FileApp {
   def main(args: Array[String]): Unit = {
-    implicit val system: ActorSystem = ActorSystem.create("akka-streams-kafka", ConfigFactory.load("app.conf"))
+    implicit val system: ActorSystem = ActorSystem.create("file-app", ConfigFactory.load("app.conf"))
     implicit val dispatcher: ExecutionContext = system.dispatcher
     println("*** akka system started")
 
-    
+
 
     Await.result(system.terminate(), 10 seconds)
     println("*** akka system terminated")
