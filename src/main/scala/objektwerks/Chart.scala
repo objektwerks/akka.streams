@@ -8,7 +8,7 @@ import org.jfree.chart.plot.XYPlot
 import org.jfree.chart.renderer.xy.XYLineAndShapeRenderer
 import org.jfree.data.time.{TimeSeries, TimeSeriesCollection}
 
-object StreamingChart {
+object Chart {
   def apply(timeSeries: TimeSeries): StreamingChart = new StreamingChart(timeSeries)
 }
 

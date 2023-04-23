@@ -17,6 +17,7 @@ import org.jfree.data.time.Millisecond
 import scala.concurrent.duration._
 import scala.language.postfixOps
 import scala.util.Random
+import objektwerks.StreamingChart
 
 object ChartApp {
   def main(args: Array[String]): Unit = {
@@ -27,7 +28,7 @@ object ChartApp {
     EventQueue.invokeLater( () => {
         setLookAndFeel(getSystemLookAndFeelClassName)
 
-        val chart = StreamingChart(timeSeries)
+        val chart = Chart(timeSeries)
         val chartPanel = new ChartPanel( chart.jFreeChart )
         chartPanel.setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15))
 
