@@ -17,6 +17,9 @@ object FileApp {
     println("*** akka system started")
 
 
+    println(s"*** once all words have been printed, depress RETURN key to shutdown app")
+
+    StdIn.readLine()
 
     Await.result(system.terminate(), 10 seconds)
     println("*** akka system terminated")
