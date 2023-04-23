@@ -7,19 +7,11 @@ import com.typesafe.config.ConfigFactory
 
 import java.nio.file.Path
 
-import scala.concurrent.{Await, ExecutionContext, Future}
+import scala.concurrent.{Await, ExecutionContext}
 import scala.concurrent.duration._
-import scala.io.Codec
 import scala.language.postfixOps
-import scala.util.{Try, Using}
 
 object FileApp {
-  def fileToLines(file: String): Try[Seq[String]] = {
-    Using( scala.io.Source.fromFile(file, Codec.UTF8.name) ) {
-      source => source.getLines().toSeq 
-    }
-  }
-
   def main(args: Array[String]): Unit = {
     implicit val system: ActorSystem = ActorSystem.create("file-app", ConfigFactory.load("app.conf"))
     implicit val dispatcher: ExecutionContext = system.dispatcher
