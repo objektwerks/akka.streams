@@ -20,7 +20,7 @@ object FileApp {
     val source = FileIO.fromPath(Path.of("./LICENSE"))
     val sink = FileIO.toPath(Path.of("./target/license.txt"))
     Await.result( source.runWith(sink), 2 seconds )
-    println("*** see new license file at /target/license.txt")
+    println("*** see license file at /target/license.txt")
 
     Await.result(system.terminate(), 2 seconds)
     println("*** akka system terminated")
