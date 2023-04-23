@@ -15,7 +15,7 @@ object FutureApp {
     val numbers = 10
     val parallelism = Runtime.getRuntime.availableProcessors
 
-    implicit val system: ActorSystem = ActorSystem.create("akka-streams-kafka", ConfigFactory.load("app.conf"))
+    implicit val system: ActorSystem = ActorSystem.create("akka-streams-future-app", ConfigFactory.load("app.conf"))
     implicit val dispatcher: ExecutionContext = system.dispatcher
     println("*** akka system started")
 
