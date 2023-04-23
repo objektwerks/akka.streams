@@ -42,7 +42,7 @@ final class Manager(workers: Int) extends Actor with ActorLogging {
 }
 
 object ActorApp {
-  def main(args: Array[String]): Unit = {e
+  def main(args: Array[String]): Unit = {
     val workers = 10
     val parallelism = Runtime.getRuntime.availableProcessors
 
