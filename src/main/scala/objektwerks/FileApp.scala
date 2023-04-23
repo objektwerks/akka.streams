@@ -12,12 +12,10 @@ import scala.language.postfixOps
 import scala.util.{Try, Using}
 
 object FileApp {
-  val utf8 = Codec.UTF8.name
-
-  def fileToLines(file: String): Try[Seq[String]] = {
-    Using( scala.io.Source.fromFile(file, utf8) ) { 
-      source => source.getLines().toSeq 
-    }
+  def words(): List[String] = {
+    Using( scala.io.Source.fromFile("./LICENSE", Codec.UTF8.name) ) { 
+      source => source.mkString.split("\\W+")
+    }.get.toList
   }
 
   def main(args: Array[String]): Unit = {
