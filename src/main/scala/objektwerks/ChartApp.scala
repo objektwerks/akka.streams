@@ -21,7 +21,7 @@ import objektwerks.StreamingChart
 
 object ChartApp {
   def main(args: Array[String]): Unit = {
-    implicit val system = ActorSystem.create("akka-streams-chart-app", ConfigFactory.load("app.conf"))
+    implicit val system = ActorSystem.create("chart-app", ConfigFactory.load("app.conf"))
     implicit val dispatcher = system.dispatcher
     val timeSeries = new TimeSeries("Time")
 
