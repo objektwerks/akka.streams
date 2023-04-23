@@ -42,11 +42,11 @@ final class Manager(workers: Int) extends Actor with ActorLogging {
 }
 
 object ActorApp {
-  def main(args: Array[String]): Unit = {
+  def main(args: Array[String]): Unit = {e
     val workers = 10
     val parallelism = Runtime.getRuntime.availableProcessors
 
-    implicit val system: ActorSystem = ActorSystem.create("akka-streams-actor-app", ConfigFactory.load("app.conf"))
+    implicit val system: ActorSystem = ActorSystem.create("actor-app", ConfigFactory.load("app.conf"))
     implicit val dispatcher: ExecutionContext = system.dispatcher
     implicit val timeout = Timeout(10 seconds)
     val manager = system.actorOf(Props(classOf[Manager], workers), name = "manager")
