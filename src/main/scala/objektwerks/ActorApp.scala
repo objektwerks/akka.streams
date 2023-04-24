@@ -16,11 +16,15 @@ import scala.language.postfixOps
 final case class Work(id: Int)
 final case class Processed(worker: Int)
 
+/**
+  * WARNING: Don't use s string interpolation in Akka Acotr logging!
+  * Doing so incurs a huge performance penalty!
+  */
 final class Worker(id: Int) extends Actor with ActorLogging {
   log.info(s"*** worker actor $id intialized")
 
   def receive: Receive = {
-    case work @ Work(id) => log.info(s"*** name: ${context.self.path.name} id: $id working ...")
+    case work @ Work(id) => log.info("*** name: {} id: {} working ...", context.self.path.name, id)
   }
 }
 
