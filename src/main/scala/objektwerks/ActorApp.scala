@@ -17,8 +17,9 @@ final case class Work(id: Int)
 final case class Processed(worker: Int)
 
 /**
-  * WARNING: Don't use s string interpolation in Akka Acotr logging!
-  * Doing so incurs a huge performance penalty!
+  * WARNING: Don't use string interpolation in Akka Acotr logging!
+  * Doing so incurs a huge performance penalty! Use this technique:
+  * log.info("*** commment {}", message)
   */
 final class Worker(id: Int) extends Actor with ActorLogging {
   log.info(s"*** worker actor $id intialized")
