@@ -19,8 +19,8 @@ object FileApp {
     implicit val dispatcher: ExecutionContext = system.dispatcher
     println("*** akka system started")
 
-    val licenseFileSource = FileIO.fromPath(Path.of("./LICENSE"))
-    val licenseFileSink = FileIO.toPath(Path.of("./target/copy.of.license.txt"))
+    val licenseFileSource = FileIO.fromPath( Path.of("./LICENSE") )
+    val licenseFileSink = FileIO.toPath( Path.of("./target/copy.of.license.txt") )
     Await.result(
       awaitable = licenseFileSource.runWith(licenseFileSink),
       atMost = 2 seconds
@@ -32,7 +32,7 @@ object FileApp {
       .filter(i => i % 2 == 0)
       .map(i => i * 2)
       .map(i => ByteString(s"$i\n"))
-    val evensSquaredFileSink = FileIO.toPath(Path.of("./target/evens.squared.txt"))
+    val evensSquaredFileSink = FileIO.toPath( Path.of("./target/evens.squared.txt") )
     Await.result(
       awaitable = numbersSource
                     .via(evensSquaredFlow)
