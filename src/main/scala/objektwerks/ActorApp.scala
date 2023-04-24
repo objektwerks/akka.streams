@@ -39,7 +39,7 @@ final class Manager(workers: Int) extends Actor with ActorLogging {
 
   def receive: Receive = {
     case work @ Work(worker) =>
-      log.info(s"*** manager actor received work: $work")
+      log.info("*** manager actor received work: {}", work)
       router.route(work, sender)
       sender ! Processed(worker)
   }
