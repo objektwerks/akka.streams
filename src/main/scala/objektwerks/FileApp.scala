@@ -17,10 +17,10 @@ object FileApp {
     implicit val dispatcher: ExecutionContext = system.dispatcher
     println("*** akka system started")
 
-    val source = FileIO.fromPath(Path.of("./LICENSE"))
-    val sink = FileIO.toPath(Path.of("./target/license.txt"))
-    Await.result( source.runWith(sink), 2 seconds )
-    println("*** see license file at /target/license.txt")
+    val licenseFileSource = FileIO.fromPath(Path.of("./LICENSE"))
+    val licenseFileSink = FileIO.toPath(Path.of("./target/copy.of.license.txt"))
+    Await.result( licenseFileSource.runWith(licenseFileSink), 2 seconds )
+    println("*** see copy of license file at /target/copy.of.license.txt")
 
     Await.result(system.terminate(), 2 seconds)
     println("*** akka system terminated")
