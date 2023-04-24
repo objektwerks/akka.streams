@@ -40,7 +40,7 @@ object FileApp {
                     .run(),
       atMost = 2 seconds
     )
-    println("*** see copy of evens squared file at /target/evens.squared.txt")
+    println("*** see evens squared file at /target/evens.squared.txt")
 
     Await.result(system.terminate(), 2 seconds)
     println("*** akka system terminated")
