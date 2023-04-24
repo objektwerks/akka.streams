@@ -28,7 +28,10 @@ object FileApp {
     println("*** see copy of license file at /target/copy.of.license.txt")
 
     val numbersSource = Source(1 to 10)
-    val evensSquaredFlow = Flow[Int].filter(i => i % 2 == 0).map(i => i * 2).map(i => ByteString(s"$i\n"))
+    val evensSquaredFlow = Flow[Int]
+      .filter(i => i % 2 == 0)
+      .map(i => i * 2)
+      .map(i => ByteString(s"$i\n"))
     val evensSquaredFileSink = FileIO.toPath(Path.of("./target/evens.squared.txt"))
     Await.result(
       awaitable = numbersSource.via(evensSquaredFlow).toMat(evensSquaredFileSink)(Keep.right).run(),
