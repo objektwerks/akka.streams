@@ -1,6 +1,6 @@
 Akka Streams
 ------------
->Akka Stream feature apps and tests.
+>Akka Stream feature apps and tests, to include Swing and JFreeChart.
 
 Test
 ----
