@@ -28,7 +28,7 @@ object ChartApp {
 
     EventQueue.invokeLater(
       () => {
-        UIManager.setLookAndFeel( FlatDarculaLaf() )
+        UIManager.setLookAndFeel( new FlatDarculaLaf() )
 
         val chart = Chart(timeSeries)
         val chartPanel = new ChartPanel( chart.jFreeChart )
