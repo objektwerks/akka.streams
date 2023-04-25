@@ -3,7 +3,7 @@ package objektwerks
 import akka.actor.ActorSystem
 import akka.stream.scaladsl._
 
-import com.formdev.flatlaf.FlatDarculaLaf
+import com.formdev.flatlaf.FlatLightLaf
 import com.formdev.flatlaf.util.SystemInfo
 import com.typesafe.config.ConfigFactory
 
@@ -28,7 +28,7 @@ object ChartApp {
 
     EventQueue.invokeLater(
       () => {
-        UIManager.setLookAndFeel( new FlatDarculaLaf() )
+        UIManager.setLookAndFeel( new FlatLightLaf() )
 
         val chart = Chart(timeSeries)
         val chartPanel = new ChartPanel( chart.jFreeChart )
