@@ -3,12 +3,14 @@ package objektwerks
 import akka.actor.ActorSystem
 import akka.stream.scaladsl._
 
+import com.formdev.flatlaf.FlatDarculaLaf
+import com.formdev.flatlaf.util.SystemInfo
 import com.typesafe.config.ConfigFactory
 
 import java.awt.{BorderLayout, EventQueue}
 
 import javax.swing.{BorderFactory, JFrame, WindowConstants}
-import javax.swing.UIManager._
+import javax.swing.UIManager
 
 import org.jfree.chart.ChartPanel
 import org.jfree.data.time.{TimeSeries, TimeSeriesDataItem}
@@ -17,7 +19,6 @@ import org.jfree.data.time.Millisecond
 import scala.concurrent.duration._
 import scala.language.postfixOps
 import scala.util.Random
-import objektwerks.StreamingChart
 
 object ChartApp {
   def main(args: Array[String]): Unit = {
@@ -25,8 +26,9 @@ object ChartApp {
     implicit val dispatcher = system.dispatcher
     val timeSeries = new TimeSeries("Time")
 
-    EventQueue.invokeLater( () => {
-        setLookAndFeel(getSystemLookAndFeelClassName)
+    EventQueue.invokeLater(
+      () => {
+        UIManager.setLookAndFeel( FlatDarculaLaf() )
 
         val chart = Chart(timeSeries)
         val chartPanel = new ChartPanel( chart.jFreeChart )
