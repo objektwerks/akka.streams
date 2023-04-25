@@ -41,7 +41,8 @@ object ChartApp {
         frame.setLocationRelativeTo(null)
         frame.add(chartPanel, BorderLayout.CENTER)
         frame.setVisible(true)
-      })
+      }
+    )
 
     def addOrUpdate(timeSeries: TimeSeries): Unit =
       timeSeries.addOrUpdate( new TimeSeriesDataItem( new Millisecond(), Random.nextDouble() ) )
