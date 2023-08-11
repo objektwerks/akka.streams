@@ -9,7 +9,7 @@ libraryDependencies ++= {
     "com.typesafe.akka" %% "akka-slf4j" % akkaVersion,
     "org.jfree" % "jfreechart" % "1.5.4",
     "com.formdev" % "flatlaf" % "3.2",
-    "ch.qos.logback" % "logback-classic" % "1.4.8",
+    "ch.qos.logback" % "logback-classic" % "1.4.11",
     "org.scalatest" %% "scalatest" % "3.2.16" % Test
   )
 }
