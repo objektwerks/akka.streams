@@ -10,6 +10,6 @@ libraryDependencies ++= {
     "org.jfree" % "jfreechart" % "1.5.4",
     "com.formdev" % "flatlaf" % "3.4.1",
     "ch.qos.logback" % "logback-classic" % "1.5.6",
-    "org.scalatest" %% "scalatest" % "3.2.18" % Test
+    "org.scalatest" %% "scalatest" % "3.2.19" % Test
   )
 }
