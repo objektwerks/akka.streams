@@ -1,4 +1,4 @@
-name := "akka.streams"
+1name := "akka.streams"
 organization := "objektwerks"
 version := "0.1-SNAPSHOT"
 scalaVersion := "2.13.15"
@@ -9,7 +9,7 @@ libraryDependencies ++= {
     "com.typesafe.akka" %% "akka-slf4j" % akkaVersion,
     "org.jfree" % "jfreechart" % "1.5.4",
     "com.formdev" % "flatlaf" % "3.5.2",
-    "ch.qos.logback" % "logback-classic" % "1.5.8",
+    "ch.qos.logback" % "logback-classic" % "1.5.11",
     "org.scalatest" %% "scalatest" % "3.2.19" % Test
   )
 }
